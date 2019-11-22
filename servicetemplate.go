@@ -14,13 +14,13 @@ import (
 )
 
 var versionG = "0.9a"
-var serviceNameG = "meetingx"
+var serviceNameG = "rediX"
 var basePathG = ""
 var configFileNameG = serviceNameG + ".cfg"
 var serviceModeG = false
 var runModeG = ""
 var currentOSG = ""
-var currentPortG = "7476"
+var currentPortG = "80"
 
 type program struct {
 	BasePath string
@@ -440,7 +440,8 @@ func runCmd(cmdLineA []string) {
 	case "version":
 		tk.Pl(serviceNameG+" V%v", versionG)
 		break
-	case "go":
+	case "go": // run in cmd mode
+		runModeG = "cmd"
 		doWork()
 		break
 	case "test":
@@ -607,9 +608,9 @@ func runCmd(cmdLineA []string) {
 func main() {
 
 	if strings.HasPrefix(runtime.GOOS, "win") {
-		basePathG = "c:\\meetingx"
+		basePathG = "c:\\" + serviceNameG
 	} else {
-		basePathG = "/meetingx"
+		basePathG = "/" + serviceNameG
 	}
 
 	if len(os.Args) < 2 {
