@@ -337,12 +337,16 @@ func Svc() {
 	if tk.GetOSName() == "windows" {
 		plByMode("Windows mode")
 		currentOSG = "win"
-		basePathG = "c:\\" + serviceNameG
+		if tk.Trim(basePathG) == "" {
+			basePathG = "c:\\" + serviceNameG
+		}
 		configFileNameG = serviceNameG + "win.cfg"
 	} else {
 		plByMode("Linux mode")
 		currentOSG = "linux"
-		basePathG = "/" + serviceNameG
+		if tk.Trim(basePathG) == "" {
+			basePathG = "/" + serviceNameG
+		}
 		configFileNameG = serviceNameG + "linux.cfg"
 	}
 
@@ -420,8 +424,13 @@ func runCmd(cmdLineA []string) {
 
 	if !tk.IfFileExists(basePathG) {
 		tk.Pl("base path not exists: %v, use current directory instead", basePathG)
-		basePathG = "."
-		return
+		basePathG, errT = filepath.Abs(".")
+
+		if errT != nil {
+			tk.Pl("failed to analyze base path")
+			return
+		}
+		// return
 	}
 
 	if !tk.IsDirectory(basePathG) {
